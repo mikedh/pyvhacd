@@ -15,7 +15,7 @@ namespace py = pybind11;
 // Each convex hull is a tuple of (vertices, indices)
 // vertices is a numpy array of shape (n, 3)
 // indices is a numpy array of shape (m,)
-std::vector<std::pair<py::array_t<double>, py::array_t<uint32_t>>> compute_vhacd(py::array_t<double> points, py::array_t<uint32_t> faces) {
+std::vector<std::pair<py::array_t<double>, py::array_t<uint32_t>>> compute_vhacd(py::array_t<double> points, py::array_t<uint32_t> faces, uint32_t maxConvexHulls = 64) {
 
 	/*  read input arrays buffer_info */
 	auto buf_points = points.request();
@@ -39,7 +39,8 @@ std::vector<std::pair<py::array_t<double>, py::array_t<uint32_t>>> compute_vhacd
 	}
 
 	VHACD::IVHACD::Parameters p;
-
+	p.m_maxConvexHulls = maxConvexHulls;
+	
 #if VHACD_DISABLE_THREADING
 	VHACD::IVHACD *iface = VHACD::CreateVHACD();
 #else
